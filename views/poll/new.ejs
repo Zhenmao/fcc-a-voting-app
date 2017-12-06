@@ -1,0 +1,32 @@
+<% include ../partials/header %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        Add a new poll
+                    </h4>
+                    <form action="/poll" method="POST">
+                        <div class="form-group">
+                            <label for="pollText" class="form-label">Poll question</label>
+                            <input type="text" class="form-control" id="pollText" name="pollText" placeholder="Poll question">
+                        </div>
+                        <div class="form-group" id="poll-options">
+                            <label for="pollOptions" class="form-label">Poll options</label>
+                            <input type="text" class="pollOptions form-control" name="pollOptions[]" placeholder="Poll option">
+                            <input type="text" class="pollOptions form-control" name="pollOptions[]" placeholder="Poll option">
+                        </div>
+                        <button class="button" type="button" id="add-option">Add an option</button>
+                        <button class="button" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer1 %>
+        <script src="/javascript/poll-new.js"></script>
+<% include ../partials/footer2 %>

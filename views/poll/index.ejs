@@ -1,0 +1,34 @@
+<% include ../partials/header %>
+
+<div class="container">
+    
+    <!--Header-->
+    <div class="jumbotron">
+        <h1>Welcom to PollPool. Your personal pollster.</h1>
+        <p>Participate an existing poll or start a new one of your own.</p>
+        <a class="button" id="new-poll" href="/poll/new">Start a new poll</a>
+        <% if (!currentUser) { %>
+            <a class="button" id="my-polls" href="/login">My polls</a>
+        <% } else { %>
+            <a class="button" id="my-polls" href=<%= "/profile/"+currentUser._id %>>My polls</a>
+        <% } %>
+    </div>
+    
+    <!--Polls-->
+    <div class="row">
+        <% polls.forEach(function(poll){ %>
+            <div class="col-md-4 col-sm-6">
+                <div class="card">
+                    <div class="card-body index-card-body">
+                        <h4 class="card-title"><%= poll.pollText %></h4>
+                        <p class="card-text">Created by <%= poll.creator.username %></p>
+                        <a class="button let-me-vote" href=<%= "/poll/" + poll._id + "/edit"%>>Let me vote</a>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>
+
+<% include ../partials/footer1 %>
+<% include ../partials/footer2 %>

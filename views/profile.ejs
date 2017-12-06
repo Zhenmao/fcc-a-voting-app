@@ -1,0 +1,37 @@
+<% include ./partials/header %>
+
+<div class="container">
+    
+    <!--Header-->
+    <div class="jumbotron">
+        <h1>Welcom to PollPool. Your personal pollster.</h1>
+        <p>Participate an existing poll or start a new one of your own.</p>
+        <a class="button" id="new-poll" href="/poll/new">Start a new poll</a>
+        <a class="button" id="all-polls" href="/poll">All polls</a>
+    </div>
+    
+    <!--My Polls-->
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">All polls created by <%= user.username %></h4>
+                    <ul class="list-group list-group-flush">
+                        <% polls.forEach(function(poll) { %>
+                            <li class="list-group-item">
+                                <h5><%= poll.pollText %></h5>
+                                <form action=<%= "/poll/" + poll._id + "?_method=DELETE"%> method="POST">
+                                    <a class="button" href=<%= "/poll/" + poll._id + "/edit"%>>Let me vote</a>
+                                    <button class="button button-delete" type="submit">Delete</button>
+                                </form>
+                            </li>
+                        <% }) %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ./partials/footer1 %>
+<% include ./partials/footer2 %>

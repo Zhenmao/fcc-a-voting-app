@@ -1,0 +1,55 @@
+<% include ../partials/header %>
+
+<div class="container">
+    
+    <!--Header-->
+    <div class="jumbotron">
+        <h1>Welcom to PollPool. Your personal pollster.</h1>
+        <p>Participate an existing poll or start a new one of your own.</p>
+        <a class="button" id="new-poll" href="/poll/new">Start a new poll</a>
+        <% if (!currentUser) { %>
+            <a class="button" id="my-polls" href="/login">My polls</a>
+        <% } else { %>
+            <a class="button" id="my-polls" href=<%= "/profile/"+currentUser._id %>>My polls</a>
+        <% } %>
+        <a class="button" id="all-polls" href="/poll">All polls</a>
+    </div>
+    
+    <!--Poll-->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-body" id="show-poll-card-body">
+                        <h4 class="card-title">
+                            <%= poll.pollText %>
+                        </h4>
+                        <form class="form" action=<%= "/poll/" + poll._id + "?_method=PUT" %> method="POST">
+                            <% poll.options.forEach(function(option){ %>
+                                <p><button class="button option-button" type="submit" name=option_id value=<%= option._id %>><%= option.optionText %></button></p>
+                            <% }) %>
+                            <p class="card-text">
+                                If you don't like above options, you can add your own below, and vote your new option.
+                            </p>
+                            <div>
+                                <div class="form-row">
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" id="new-option-input" name=option_new placeholder="Enter a new option">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="button option-button">Vote</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<% include ../partials/footer1 %>
+        <script src="/javascript/poll-edit.js"></script>
+<% include ../partials/footer2 %>

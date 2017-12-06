@@ -1,32 +1,65 @@
-'use strict';
+"use strict";
 
-var express = require('express');
-var routes = require('./app/routes/index.js');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var session = require('express-session');
+const express = require("express"),
+      bodyParser = require("body-parser"),
+      mongoose = require("mongoose"),
+      passport = require("passport"),
+      session = require("express-session"),
+      LocalStrategy = require("passport-local"),
+      methodOverride = require("method-override"),
+      flash = require("connect-flash"),
+      seedDB = require("./seeds");
+      
+const User = require("./models/user"),
+      Poll = require("./models/poll");
 
-var app = express();
+const indexRoutes = require("./routes/index"),
+	  pollRoutes = require("./routes/poll");
+
+const app = express();
 require('dotenv').load();
-require('./app/config/passport')(passport);
 
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI, { useMongoClient: true });
 mongoose.Promise = global.Promise;
 
-app.use('/controllers', express.static(process.cwd() + '/app/controllers'));
-app.use('/public', express.static(process.cwd() + '/public'));
-app.use('/common', express.static(process.cwd() + '/app/common'));
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
+app.use(flash());
 
 app.use(session({
-	secret: 'secretClementine',
+	secret: "votingAppSecret",
 	resave: false,
-	saveUninitialized: true
+	saveUninitialized: false
 }));
 
+// Passport configuration
 app.use(passport.initialize());
 app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-routes(app, passport);
+// Make req.user and flash message available in ejs templates
+app.use(function(req, res, next) {
+	res.locals.currentUser = req.user;
+	res.locals.error = req.flash("error");
+	res.locals.success = req.flash("success");
+	next();
+});
+
+// Routes
+app.use("/", indexRoutes);
+app.use("/poll/", pollRoutes);
+
+// Error handling
+app.use(function(err, req, res, next) {
+	res.status(err.status || 500)
+		.json({ error: err.message });
+});
+
+// seedDB(); // Seed the database
 
 var port = process.env.PORT || 8080;
 app.listen(port,  function () {

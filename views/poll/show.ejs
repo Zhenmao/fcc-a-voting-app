@@ -1,0 +1,42 @@
+<% include ../partials/header %>
+
+<div class="container">
+    
+    <!--Header-->
+    <div class="jumbotron">
+        <h1>Welcom to PollPool. Your personal pollster.</h1>
+        <p>Participate an existing poll or start a new one of your own.</p>
+        <a class="button" id="new-poll" href="/poll/new">Start a new poll</a>
+        <% if (!currentUser) { %>
+            <a class="button" id="my-polls" href="/login">My polls</a>
+        <% } else { %>
+            <a class="button" id="my-polls" href=<%= "/profile/"+currentUser._id %>>My polls</a>
+        <% } %>
+        <a class="button" id="all-polls" href="/poll">All polls</a>
+    </div>
+    
+    <!--Poll-->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-body" id="show-poll-card-body">
+                        <h4 class="card-title">
+                            <%= poll.pollText %>
+                        </h4>
+                        <svg></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<% include ../partials/footer1 %>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script type="text/javascript">
+             const data = <%- JSON.stringify(poll.options) %> // use this variable in D3
+        </script>
+        <script src="/javascript/poll-show.js"></script>
+<% include ../partials/footer2 %>
